@@ -15,15 +15,12 @@ app.prepare().then(() => {
   const io = new Server(httpServer);
 
   io.on("connection", (socket) => {
-    socket.emit("hello","world")
-  });
-
-  httpServer
-    .once("error", (err) => {
-      console.error(err);
-      process.exit(1);
-    })
-    .listen(port, () => {
-      console.log(`> Ready on http://${hostname}:${port}`);
+    socket.on("chat message", (msg) => {
+      io.emit("chat message", msg, socket.id);
+      console.log("server msg", msg);
     });
+  });
+  httpServer.listen(port, () => {
+    console.log(`🚀 Ready on http://${hostname}:${port}`);
+  });
 });
